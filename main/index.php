@@ -6,8 +6,13 @@ if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
 }
 $userId = $_SESSION['user_id']; -->
 
+<?php
+session_start();
+?>
+
 
 <?php
+
 //database connection
 include '../partials/database.php';
 
@@ -76,6 +81,14 @@ if (isset($_GET['status'])) {
 }
 ?>
 
+<?php
+if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
+    $loggedin = true;
+} else {
+    $loggedin = false;
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -112,7 +125,9 @@ if (isset($_GET['status'])) {
                     <li><a href="#contact">Contact Us</a></li>
                 </ul>
 
-                <p id="user">
+                <?php
+                if (!$loggedin) {
+                    echo ' <p id="user">
                     <a href="#" id="loginBtn" data-bs-toggle="modal" data-bs-target="#Sign_upModal">
                         <i class="hgi hgi-stroke hgi-user-circle-02"></i>
                         Sign up
@@ -120,7 +135,20 @@ if (isset($_GET['status'])) {
                     <a href="#" id="loginBtn" data-bs-toggle="modal" data-bs-target="#LoginModal">
                         Login
                     </a>
-                </p>
+                </p>';
+                }
+                if ($loggedin) {
+                    echo '
+                          <p id="user">
+                          <a href="logout.php">
+                         <i class="hgi hgi-stroke hgi-user-circle-02"></i>
+                          Logout
+                           </a>
+                            </p>';
+                }
+
+
+                ?>
                 <!-- Hamburger Icon -->
                 <div class="burger" id="burger">
                     <div class="line1"></div>
@@ -132,6 +160,17 @@ if (isset($_GET['status'])) {
     </header>
 
     <main>
+        <!-- greeting the user and showing the name  -->
+        <section class="todo-app app-header">
+            <?php
+            if ($loggedin) {
+                $username = $_SESSION['username'];
+                echo "<h1>Welcome, $username </h1>";
+                echo "<p>Write it down, before your brain yeets it away.</p>";
+            }
+            ?>
+        </section>
+
         <section class="container" id="home">
             <div class="todo-app">
                 <div class="app-header">
@@ -219,7 +258,8 @@ if (isset($_GET['status'])) {
                 water that sad-looking plant, TaskMaster's got your back.
             </p>
             <p>
-                TaskMaster was designed and developed by Garvit as part of an initiative to deepen full-stack development
+                TaskMaster was designed and developed by Garvit as part of an initiative to deepen full-stack
+                development
                 skills.
                 It reflects a strong focus on usability, maintainability, and aesthetic simplicity — turning a basic
                 to-do app into a
@@ -298,7 +338,8 @@ if (isset($_GET['status'])) {
     <!-- Sign Up Modal -->
     <div class="modal fade" id="Sign_upModal" tabindex="-1" aria-labelledby="ModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content mx-auto" style="max-width: 500px;"> <!-- Center horizontally -->
+            <div class="modal-content mx-auto" style="max-width: 500px;">
+                <!-- Center horizontally -->
 
                 <div class="modal-header">
                     <h2 class="modal-title" id="ModalTitle">Sign up</h2>
@@ -329,7 +370,8 @@ if (isset($_GET['status'])) {
     <!-- Login Modal -->
     <div class="modal fade" id="LoginModal" tabindex="-1" aria-labelledby="ModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content mx-auto" style="max-width: 500px;"> <!-- Center horizontally -->
+            <div class="modal-content mx-auto" style="max-width: 500px;">
+                <!-- Center horizontally -->
 
                 <div class="modal-header">
                     <h2 class="modal-title" id="ModalTitle">Login</h2>
