@@ -23,7 +23,7 @@ $error = false;
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $title = $_POST['title'];
     $description = $_POST['description'];
-
+    $userId = $_SESSION['user_id'];
 
     // checks the boxes are not blank
     if (empty($title) || empty($description)) {
@@ -31,8 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
 
         //  inserting the data 
-        // $sql = "INSERT INTO notes (`Title`, `Description`, `user_id`) VALUES('$title', '$description', '$userId')";
-        $sql = "INSERT INTO notes (`Title`, `Description`) VALUES('$title', '$description')";
+        // $sql = "INSERT INTO notes (`Title`, `Description`) VALUES('$title', '$description')";
+        $sql = "INSERT INTO notes (`Title`, `Description`, `user_id`) VALUES('$title', '$description', '$userId')";
         $result = mysqli_query($conn, $sql);
 
         if ($result) {
@@ -113,51 +113,9 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 </head>
 
 <body>
-    <header>
-        <nav class="custom-navbar">
-            <div class="navbar-container">
-                <div class="navbar-logo"><a href="#home">Todo</a></div>
-
-                <!-- Links -->
-                <ul class="navbar-menu" id="navMenu">
-                    <li><a href="#home">Home</a></li>
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Contact Us</a></li>
-                </ul>
-
-                <?php
-                if (!$loggedin) {
-                    echo ' <p id="user">
-                    <a href="#" id="loginBtn" data-bs-toggle="modal" data-bs-target="#Sign_upModal">
-                        <i class="hgi hgi-stroke hgi-user-circle-02"></i>
-                        Sign up
-                    </a>
-                    <a href="#" id="loginBtn" data-bs-toggle="modal" data-bs-target="#LoginModal">
-                        Login
-                    </a>
-                </p>';
-                }
-                if ($loggedin) {
-                    echo '
-                          <p id="user">
-                          <a href="logout.php">
-                         <i class="hgi hgi-stroke hgi-user-circle-02"></i>
-                          Logout
-                           </a>
-                            </p>';
-                }
-
-
-                ?>
-                <!-- Hamburger Icon -->
-                <div class="burger" id="burger">
-                    <div class="line1"></div>
-                    <div class="line2"></div>
-                    <div class="line3"></div>
-                </div>
-            </div>
-        </nav>
-    </header>
+   
+<!-- adding header -->
+<?php include '../partials/header.php';?>
 
     <main>
         <!-- greeting the user and showing the name  -->
@@ -213,9 +171,10 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
                             <?php
                             //displaying data
-                            // $sql = "SELECT * FROM `notes` WHERE user_id = $userId";
                             $sql = "SELECT * FROM `notes`";
-
+                    
+                            // $userId = $_SESSION['user_id'];
+                            // $sql = "SELECT * FROM `notes` WHERE `user_id` = $userId";
                             $result = mysqli_query($conn, $sql);
 
                             $counter = 1;
@@ -247,70 +206,20 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                 </div>
             </div>
         </section>
+<!-- adding about section -->
+    <?php include '../partials/about.php';?>
+   
+    <!-- adding contact_us section -->
+    <?php include '../partials/contact_us.php';?>
+    
+    
+    <!-- <div class="offline-badge">
+        <i class="fas fa-wifi-slash"></i> You're offline
+    </div> -->
+</main>
 
-        <section class="about-section" id="about">
-            <h2>About TaskMaster</h2>
-            <p>
-                TaskMaster is your minimalist companion for conquering chaos — a sleek, no-nonsense Todo app built to
-                help you
-                organize your day and reclaim your focus. Whether it's college deadlines, work tasks, or just
-                remembering to
-                water that sad-looking plant, TaskMaster's got your back.
-            </p>
-            <p>
-                TaskMaster was designed and developed by Garvit as part of an initiative to deepen full-stack
-                development
-                skills.
-                It reflects a strong focus on usability, maintainability, and aesthetic simplicity — turning a basic
-                to-do app into a
-                streamlined productivity tool.
-            </p>
-
-            <p>
-                Got feedback? Want to collab? Hit me up through the Contact section!
-            </p>
-        </section>
-
-
-
-        <section class="contact-section" id="contact">
-            <div class="contact-container">
-                <h2>Contact Us</h2>
-                <p>Have a question, suggestion, or just want to say hi? Drop a message below.</p>
-
-                <form class="contact-form" action="mailto:youremail@example.com" method="POST" enctype="text/plain">
-                    <input type="text" name="name" placeholder="Your Name" required>
-                    <input type="email" name="email" placeholder="Your Email" required>
-                    <textarea name="message" rows="5" placeholder="Your Message" required></textarea>
-                    <button type="submit" class="contact-btn">Send Message</button>
-                </form>
-            </div>
-        </section>
-
-        <!-- <div class="offline-badge">
-            <i class="fas fa-wifi-slash"></i> You're offline
-        </div> -->
-    </main>
-
-
-    <footer class="footer">
-        <div class="footer-container">
-            <p>&copy; 2025 TaskMaster. All rights reserved.</p>
-            <p>Developed by Garvit | <a href="#home">Home</a> | <a href="#about">About</a> | <a href="#contact">Contact
-                    Us</a></p>
-            <p>
-                Follow me:
-                <a href="https://github.com/ConfusedCrab" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-github"></i>
-                </a>
-                <a href="https://leetcode.com/u/ConfusedCrab/" target="_blank" rel="noopener noreferrer">
-                    <i class="fab fa-linkedin"></i>
-                </a>
-
-            </p>
-
-        </div>
-    </footer>
+<!-- adding footer -->
+<?php include '../partials/footer.php';?>
 
     <!-- Custom Edit Modal -->
     <div id="editModal" class="modal">

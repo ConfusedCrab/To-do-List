@@ -1,4 +1,12 @@
 <?php
+session_start();
+if (!isset($_SESSION['loggedin']) || $_SESSION['loggedin'] !== true) {
+    header("Location: index.php");
+    exit;
+}
+?>
+
+<?php
 include 'database.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {

@@ -14,7 +14,7 @@
         $error = true;
     }
          -->
-         <!-- // Fetch user row based on username
+<!-- // Fetch user row based on username
          // $sql = "SELECT * FROM login WHERE Username='$username'";
             // Validate user by matching both username and email
              // $sql = "SELECT * FROM users WHERE Username='$username' AND Email='$email'"; -->
@@ -41,8 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $login = true;
             session_start();
             $_SESSION['loggedin'] = true;
-          $_SESSION['username'] = $row['username'];
-
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['user_id'] = $row['id']; // Assuming 'id' is the primary key in your `users` table
 
             // Redirect with success status
             header("Location: index.php?status=login_success");
