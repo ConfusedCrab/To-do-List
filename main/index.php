@@ -96,6 +96,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todo List</title>
+     <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 
@@ -103,13 +105,7 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
     <!-- for table -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.1/css/dataTables.dataTables.min.css">
-
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.min.js"></script>
-
-    <!-- Bootstrap CSS -->
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
-        integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous"> -->
-
 </head>
 
 <body>
@@ -170,8 +166,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                 <button class="filter-btn" data-filter="completed">Completed</button>
              </div> -->
 
-                <div class="table task-list">
-                    <table class="table" id="myTable">
+                <div class="CustomTable task-list">
+                    <table class="CustomTable" id="myTable">
                         <thead>
                             <tr>
                                 <th scope="col">S.no.</th>
@@ -328,10 +324,6 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
     <!-- script for table  -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-Fy6S3B9q64WdZWQUiU+q4/2Lc9npb8tCaSX9FK7E8HnRr0Jz8D6OP9dO5Vg3Q9ct" crossorigin="anonymous">
-        </script>
-
     <script src="https://cdn.datatables.net/2.3.1/js/dataTables.min.js"></script>
     <script>
         let table = new DataTable('#myTable');
@@ -361,17 +353,6 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
         <?php if (!empty($statusMessage)): ?>
             showNotification("<?= $statusMessage ?>", "<?= $statusType ?>");
         <?php endif; ?>
-    </script>
-
-    <!-- for burger -->
-    <script>
-        const burger = document.getElementById('burger');
-        const navMenu = document.getElementById('navMenu');
-
-        burger.addEventListener('click', () => {
-            navMenu.classList.toggle('active');
-            burger.classList.toggle('toggle');
-        });
     </script>
 
     <!-- modal -->
