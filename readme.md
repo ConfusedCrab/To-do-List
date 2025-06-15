@@ -23,4 +23,13 @@ A responsive, full-featured **ToDo Web Application** built with HTML, CSS, PHP, 
 | DataTables JS | Custom JS | phpMyAdmin (used for testing) |
 
 
+##   Author
+Garvit Gupta
+Frontend & Backend Developer
 
+##  License
+MIT License — Feel free to use, modify, and share ✌️
+
+
+##  Support
+Found this helpful? Consider ⭐ starring the repo or sharing with friends!
