@@ -166,8 +166,8 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                 <button class="filter-btn" data-filter="completed">Completed</button>
              </div> -->
 
-                <div class="CustomTable task-list">
-                    <table class="CustomTable" id="myTable">
+                <div class="CustomTable task-list table-responsive-custom">
+                    <table class="CustomTable nowrap" id="myTable" style="width:100%">
                         <thead>
                             <tr>
                                 <th scope="col">S.no.</th>
