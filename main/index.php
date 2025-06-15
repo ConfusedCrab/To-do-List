@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         //  inserting the data 
         // $sql = "INSERT INTO notes (`Title`, `Description`) VALUES('$title', '$description')";
-        $sql = "INSERT INTO notes (`Title`, `Description`, `user_id`) VALUES('$title', '$description', '$userId')";
+        $sql = "INSERT INTO notes (`user_id`,`Title`, `Description` ) VALUES('$userId', '$title', '$description' )";
         $result = mysqli_query($conn, $sql);
 
         if ($result) {
@@ -113,9 +113,9 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 </head>
 
 <body>
-   
-<!-- adding header -->
-<?php include '../partials/header.php';?>
+
+    <!-- adding header -->
+    <?php include '../partials/header.php'; ?>
 
     <main>
         <!-- greeting the user and showing the name  -->
@@ -125,6 +125,9 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                 $username = $_SESSION['username'];
                 echo "<h1>Welcome, $username </h1>";
                 echo "<p>Write it down, before your brain yeets it away.</p>";
+            } else {
+                echo "<h1>Welcome, Guest!</h1>";
+                echo ' <p><a href="#" id="loginBtn" data-bs-toggle="modal" data-bs-target="#LoginModal">Login </a>to Add a Task</p>';
             }
             ?>
         </section>
@@ -138,24 +141,34 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                         <p>Write it down, before your brain yeets it away.</p> -->
                 </div>
 
-                <form class="input-section" id="noteForm" action="index.php" method="post">
+                <?php
+                $loggedin = isset($_SESSION['loggedin']) && $_SESSION['loggedin'] === true;
+                ?>
+
+                <form class="input-section" id="noteForm" action="index.php" method="post"
+                    data-loggedin="<?= $loggedin ? '1' : '0' ?>">
                     <input type="text" class="task-input" name="title" id="title" placeholder="Add a new task..."
                         required>
-
 
                     <div class="input-section" style="margin-bottom: 2rem;">
                         <textarea class="task-input" name="description" id="description" placeholder="Task Description"
                             rows="3" required></textarea>
                     </div>
 
-                    <button type="submit" class="add-btn" onclick="submitNote()">Add Note</button>
+                    <?php if ($loggedin): ?>
+                        <button type="submit" class="add-btn" onclick="submitNote()">Add Note</button>
+                    <?php else: ?>
+                        <button type="button" class="add-btn" data-bs-toggle="modal" data-bs-target="#LoginModal">
+                            Login to Add Note
+                        </button>
+                    <?php endif; ?>
                 </form>
 
                 <!-- <div class="filters">
                 <button class="filter-btn active" data-filter="all">All</button>
                 <button class="filter-btn" data-filter="active">Active</button>
                 <button class="filter-btn" data-filter="completed">Completed</button>
-            </div> -->
+             </div> -->
 
                 <div class="table task-list">
                     <table class="table" id="myTable">
@@ -171,34 +184,37 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
 
                             <?php
                             //displaying data
-                            $sql = "SELECT * FROM `notes`";
-                    
-                            // $userId = $_SESSION['user_id'];
-                            // $sql = "SELECT * FROM `notes` WHERE `user_id` = $userId";
-                            $result = mysqli_query($conn, $sql);
-
-                            $counter = 1;
-                            while ($row = mysqli_fetch_assoc($result)) {
-                                echo "
+                            // $sql = "SELECT * FROM `notes`";
+                            
+                            if (isset($_SESSION['user_id'])) {
+                                $userId = intval($_SESSION['user_id']); // Always sanitize!
+                                $sql = "SELECT * FROM `notes` WHERE `user_id` = $userId";
+                                $result = mysqli_query($conn, $sql);
+                                if (!$result) {
+                                    echo "<tr><td colspan='4'>Error retrieving notes: " . mysqli_error($conn) . "</td></tr>";
+                                } else {
+                                    $counter = 1;
+                                    while ($row = mysqli_fetch_assoc($result)) {
+                                        echo "
                                 <tr>
-                                  <th scope='row'>" . $counter++ . "</th>
+                                  <td scope='row'> " . $counter++ . "</td>
                                     <td>" . $row['Title'] . "</td>
                                      <td>" . $row['Description'] . "</td>
                                        <td>
                                        
-                                        <button 
-                                          class='edit btn-primary' 
-                                            data-id='" . $row['S_no'] . "' 
-                                              data-title=\"" . htmlspecialchars($row['Title'], ENT_QUOTES) . "\" 
-                                              data-description=\"" . htmlspecialchars($row['Description'], ENT_QUOTES) . "\">
+                                
+                                           <button class='edit btn-primary' data-id='" . $row['S_no'] . "' data-title=\"" . htmlspecialchars($row['Title'], ENT_QUOTES) . "\" data-description=\"" . htmlspecialchars($row['Description'], ENT_QUOTES) . "\">
                                                      Edit
                                                    </button>
-                                         
+
+                                      
                                            <a href='../partials/delete.php?id=" . $row['S_no'] . "' onclick='return confirm(\"Are you sure?\")' class='table-button'>Delete</a>    
                                       </td>
 
                                 </tr>";
-                            }
+                                    }
+                                }
+                             }
                             ?>
 
                         </tbody>
@@ -206,20 +222,21 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
                 </div>
             </div>
         </section>
-<!-- adding about section -->
-    <?php include '../partials/about.php';?>
-   
-    <!-- adding contact_us section -->
-    <?php include '../partials/contact_us.php';?>
-    
-    
-    <!-- <div class="offline-badge">
+
+        <!-- adding about section -->
+        <?php include '../partials/about.php'; ?>
+
+        <!-- adding contact_us section -->
+        <?php include '../partials/contact_us.php'; ?>
+
+
+        <!-- <div class="offline-badge">
         <i class="fas fa-wifi-slash"></i> You're offline
     </div> -->
-</main>
+    </main>
 
-<!-- adding footer -->
-<?php include '../partials/footer.php';?>
+    <!-- adding footer -->
+    <?php include '../partials/footer.php'; ?>
 
     <!-- Custom Edit Modal -->
     <div id="editModal" class="modal">
@@ -400,6 +417,18 @@ if (isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true) {
             });
 
         });
+    </script>
+    <!-- for input form  -->
+    <script>
+        document.getElementById('noteForm').addEventListener('submit', function (event) {
+            const isLoggedIn = this.dataset.loggedin === "1";
+            if (!isLoggedIn) {
+                event.preventDefault(); // Block form submission
+                const loginModal = new bootstrap.Modal(document.getElementById('LoginModal'));
+                loginModal.show(); // Show login modal
+            }
+        });
+        
     </script>
 
 

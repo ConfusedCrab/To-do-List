@@ -45,20 +45,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $email = $_POST["email"];
 
   // new one 
+  // Check if username exists
   $checkUser = "SELECT * FROM users WHERE username='$username'";
   $result = mysqli_query($conn, $checkUser);
   $numExistRows = mysqli_num_rows($result);
 
+  // Check if email exists
+  $checkEmail = "SELECT * FROM users WHERE email='$email'";
+  $emailResult = mysqli_query($conn, $checkEmail);
+  $numEmailRows = mysqli_num_rows($emailResult);
+
   if ($numExistRows > 0) {
     $exists = true;
-    echo "<script>alert('Username already exists!');</script>";
-    // Redirect 
-    header("Location: index.php");
+    echo "<script>
+     alert('Username already exists!');
+    //  Redirect 
+      window.location.href = 'index.php';
+    </script>";
+    exit;
+  } else if ($numEmailRows > 0) {
+    echo "<script>
+   alert('Email already in use!');
+   // Redirect 
+      window.location.href = 'index.php';
+    </script>";
     exit;
   } else if ($password !== $cpassword) {
-    echo "<script>alert('Passwords do not match!');</script>";
+    echo "<script>
+    alert('Passwords do not match!');
     // Redirect 
-    header("Location: index.php");
+      window.location.href = 'index.php';
+    </script>";
     exit;
   } else {
     // hash password
@@ -74,6 +91,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       exit;
     }
   }
-
 }
 ?>
